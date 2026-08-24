@@ -1,0 +1,14 @@
+{
+  "Train" : {
+    "batch_size": 64,
+    "learning_rate": 0.1,
+    "reg": 0.001,
+    "epochs": 10,
+    "debug": true
+  },
+  "Model" : {
+    "type": "TwoLayerNet",
+    "hidden_size": 128,
+    "comments": "type is either SoftmaxRegression or TwoLayerNet, hidden_size only applicable for TwolayerNet"
+  }
+}
