@@ -47,7 +47,11 @@ def load_mnist_trainval(mnist_data, mnist_labels):
     #       data. Use 80% of your data for training and 20% of your data for    #
     #       validation. Note: Don't shuffle here.                               #
     #############################################################################
-    
+    train_data = mnist_data[:48000]
+    train_label = mnist_labels[:48000]
+
+    val_data = mnist_data[48000:]
+    val_label = mnist_labels[48000:]
     #############################################################################
     #                              END OF YOUR CODE                             #
     #############################################################################
@@ -79,7 +83,18 @@ def generate_batched_data(data, label, batch_size=32, shuffle=False, seed=None):
     #    It's okay if the size of your last batch is smaller than the required  #
     #    batch size                                                             #
     #############################################################################
-   
+    if shuffle:
+        indices = np.arange(len(data))
+        np.random.shuffle(indices)
+        data = np.asarray(data)[indices]
+        label = np.asarray(label)[indices]
+
+    batched_data = []
+    batched_label = []
+
+    for i in range(0, len(data), batch_size):
+        batched_data.append(np.asarray(data[i:i + batch_size]))
+        batched_label.append(np.asarray(label[i:i + batch_size]))
     #############################################################################
     #                              END OF YOUR CODE                             #
     #############################################################################
