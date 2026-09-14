@@ -1,5 +1,9 @@
 **/.DS_Store
 
 **/__pycache__/
+
+**/cifar-10-batches-py/
+**/MNIST/raw/*.csv
+**/data/MNIST/
 *.pyc
 **/data/MNIST/
