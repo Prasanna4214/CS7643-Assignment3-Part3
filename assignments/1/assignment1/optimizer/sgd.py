@@ -45,7 +45,8 @@ class SGD(_BaseOptimizer):
         # TODO:                                                                     #
         #    1) Update model weights based on the learning rate and gradients       #
         #############################################################################
-      
+        for key in model.weights:
+            model.weights[key] -= self.learning_rate * model.gradients[key]
         #############################################################################
         #                              END OF YOUR CODE                             #
         #############################################################################
