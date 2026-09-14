@@ -57,16 +57,8 @@ class _baseNetwork:
         # TODO:                                                                     #
         #    1) Calculate softmax scores of input images                            #
         #############################################################################
-        max_scores = np.max(scores, axis=1, keepdims=True)
-        stable_scores = scores - max_scores
-
-        exponentials = np.exp(stable_scores)
-        prob = exponentials / np.sum(
-            exponentials,
-            axis=1,
-            keepdims=True
-        )
-
+        exp_scores = np.exp(scores - np.max(scores, axis=1, keepdims=True))
+        prob = exp_scores / np.sum(exp_scores, axis=1, keepdims=True)
         #############################################################################
         #                              END OF YOUR CODE                             #
         #############################################################################
@@ -85,11 +77,7 @@ class _baseNetwork:
         # TODO:                                                                     #
         #    1) Implement Cross-Entropy Loss                                        #
         #############################################################################
-        correct_class_probs = x_pred[np.arange(len(y)), y]
-
-        epsilon = 1e-12
-        loss = -np.mean(np.log(correct_class_probs + epsilon))
-
+        loss = -np.mean(np.log(x_pred[np.arange(x_pred.shape[0]), y]))
         #############################################################################
         #                              END OF YOUR CODE                             #
         #############################################################################
@@ -107,8 +95,8 @@ class _baseNetwork:
         # TODO:                                                                     #
         #    1) Implement the accuracy function                                     #
         #############################################################################
-        predicted_labels = np.argmax(x_pred, axis=1)
-        acc = np.mean(predicted_labels == y)
+        predictions = np.argmax(x_pred, axis=1)
+        acc = np.mean(predictions == y)
         #############################################################################
         #                              END OF YOUR CODE                             #
         #############################################################################
@@ -126,7 +114,7 @@ class _baseNetwork:
         #############################################################################
         # TODO: Comput the sigmoid activation on the input                          #
         #############################################################################
-        out = np.where(X >= 0, 1 / (1 + np.exp(-X)), np.exp(X) / (1 + np.exp(X)))
+        out = 1 / (1 + np.exp(-X))
         #############################################################################
         #                              END OF YOUR CODE                             #
         #############################################################################
@@ -143,8 +131,8 @@ class _baseNetwork:
         # TODO:                                                                     #
         #    1) Implement the derivative of Sigmoid function                        #
         #############################################################################
-        sigmoid_value = self.sigmoid(x)
-        ds = sigmoid_value * (1 - sigmoid_value)
+        sigmoid_x = self.sigmoid(x)
+        ds = sigmoid_x * (1 - sigmoid_x)
         #############################################################################
         #                              END OF YOUR CODE                             #
         #############################################################################

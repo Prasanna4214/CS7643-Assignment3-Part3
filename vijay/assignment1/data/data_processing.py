@@ -47,9 +47,13 @@ def load_mnist_trainval(mnist_data, mnist_labels):
     #       data. Use 80% of your data for training and 20% of your data for    #
     #       validation. Note: Don't shuffle here.                               #
     #############################################################################
+<<<<<<< HEAD:vijay/assignment1/data/data_processing.py
     
     n = len(mnist_data)
     train_size = int(0.8 * n)
+=======
+    train_size = int(0.8 * len(mnist_data))
+>>>>>>> origin:assignments/1/assignment1/data/data_processing.py
 
     train_data = mnist_data[:train_size]
     train_label = mnist_labels[:train_size]
@@ -67,7 +71,7 @@ def generate_batched_data(data, label, batch_size=32, shuffle=False, seed=None):
     """
     Turn raw data into batched forms
     :param data: A list of list containing the data where each inner list contains 28x28
-                 elements corresponding to pixel values in images: [[pix1, ..., pix784], ..., [pix1, ..., pix784]]
+                 elements corresponding to pixel values in images
     :param label: A list containing the labels of data
     :param batch_size: required batch size
     :param shuffle: Whether to shuffle the data: true for training and False for testing
@@ -77,9 +81,11 @@ def generate_batched_data(data, label, batch_size=32, shuffle=False, seed=None):
     """
     batched_data = None
     batched_label = None
-    if seed:
+
+    if seed is not None:
         random.seed(seed)
         np.random.seed(seed)
+
     #############################################################################
     # TODO:                                                                     #
     #    1) Shuffle data and label if shuffle=True                              #
@@ -87,21 +93,22 @@ def generate_batched_data(data, label, batch_size=32, shuffle=False, seed=None):
     #    It's okay if the size of your last batch is smaller than the required  #
     #    batch size                                                             #
     #############################################################################
-    data, label = np.asarray(data), np.asarray(label)
 
-    data_len = len(data)
+    data = np.asarray(data)
+    label = np.asarray(label)
 
     if shuffle:
-        indices = np.arange(data_len)
+        indices = np.arange(len(data))
         np.random.shuffle(indices)
-        data, label = data[indices], label[indices]
+        data = data[indices]
+        label = label[indices]
 
-    batched_data, batched_label = [], []
+    batched_data = []
+    batched_label = []
 
-    for start in range(0, data_len, batch_size):
-        batched_data.append(data[start:start+batch_size])
-        batched_label.append(label[start:start+batch_size])
-
+    for i in range(0, len(data), batch_size):
+        batched_data.append(np.asarray(data[i:i + batch_size]))
+        batched_label.append(np.asarray(label[i:i + batch_size]))
 
     #############################################################################
     #                              END OF YOUR CODE                             #

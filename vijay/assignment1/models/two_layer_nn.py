@@ -92,15 +92,14 @@ class TwoLayerNet(_baseNetwork):
         #    2) Compute Cross-Entropy Loss and batch accuracy based on network      #
         #       outputs                                                             #
         #############################################################################
-        W1, W2, b1, b2 = self.weights['W1'], self.weights['W2'], self.weights['b1'], self.weights['b2']
-
-        z1 = np.matmul(X, W1) + b1
+        z1 = np.dot(X, self.weights['W1']) + self.weights['b1']
         a1 = self.sigmoid(z1)
-        z2 = np.matmul(a1, W2) + b2
-        probabilities = self.softmax(z2)
 
-        loss = self.cross_entropy_loss(probabilities, y)
-        accuracy = self.compute_accuracy(probabilities, y)
+        z2 = np.dot(a1, self.weights['W2']) + self.weights['b2']
+        probs = self.softmax(z2)
+
+        loss = self.cross_entropy_loss(probs, y)
+        accuracy = self.compute_accuracy(probs, y)
         #############################################################################
         #                              END OF YOUR CODE                             #
         #############################################################################
@@ -116,19 +115,17 @@ class TwoLayerNet(_baseNetwork):
         #          the sigmoid function in self.sigmoid_dev first                   #
         #############################################################################
         if mode == 'train':
-            N = X.shape[0]
+            dz2 = probs.copy()
+            dz2[np.arange(X.shape[0]), y] -= 1
+            dz2 /= X.shape[0]
 
-            dz2 = probabilities.copy()
-            dz2[np.arange(N), y] -= 1
-            dz2 /= N
-
-            self.gradients['W2'] = np.matmul(a1.T, dz2)
+            self.gradients['W2'] = np.dot(a1.T, dz2)
             self.gradients['b2'] = np.sum(dz2, axis=0)
 
-            da1 = np.matmul(dz2, W2.T)
+            da1 = np.dot(dz2, self.weights['W2'].T)
             dz1 = da1 * self.sigmoid_dev(z1)
 
-            self.gradients['W1'] = np.matmul(X.T, dz1)
+            self.gradients['W1'] = np.dot(X.T, dz1)
             self.gradients['b1'] = np.sum(dz1, axis=0)
         #############################################################################
         #                              END OF YOUR CODE                             #

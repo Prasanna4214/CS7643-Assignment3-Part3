@@ -74,14 +74,12 @@ class SoftmaxRegression(_baseNetwork):
         # Hint:                                                                     #
         #   Store your intermediate outputs before ReLU for backwards               #
         #############################################################################
-        W1 = self.weights['W1']
+        scores = np.dot(X, self.weights['W1'])
+        relu_output = self.ReLU(scores)
+        probs = self.softmax(relu_output)
 
-        pre_relu = np.matmul(X, W1)    
-        relu_out = self.ReLU(pre_relu)
-        probabilities = self.softmax(relu_out)
-
-        loss = self.cross_entropy_loss(probabilities, y)
-        accuracy = self.compute_accuracy(probabilities, y)
+        loss = self.cross_entropy_loss(probs, y)
+        accuracy = self.compute_accuracy(probs, y)
         #############################################################################
         #                              END OF YOUR CODE                             #
         #############################################################################
@@ -93,14 +91,13 @@ class SoftmaxRegression(_baseNetwork):
         #        2) Store the gradients in self.gradients                           #
         #############################################################################
         if mode == 'train':
-            dscores = probabilities.copy()
+            dscores = probs.copy()
+            dscores[np.arange(X.shape[0]), y] -= 1
+            dscores /= X.shape[0]
 
-            dscores[np.arange(len(y)), y] -= 1
-            dscores /= len(y)
+            dscores_before_relu = dscores * self.ReLU_dev(scores)
 
-            dscores *= self.ReLU_dev(pre_relu)
-
-            self.gradients['W1'] = np.matmul(X.T, dscores)
+            self.gradients['W1'] = np.dot(X.T, dscores_before_relu)
         #############################################################################
         #                              END OF YOUR CODE                             #
         #############################################################################
