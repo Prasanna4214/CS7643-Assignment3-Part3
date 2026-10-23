@@ -1,0 +1,11 @@
+.ipynb_checkpoints/
+__pycache__/
+.pytest_cache/
+*.pyc
+Machine_Translation.htm
+Machine_Translation_files/
+assignment3_NLP_fall26.pdf
+assignment3_NLP_fall26.zip
+assignment3_nlp_submission.zip
+assignment3_nlp_submission_clean.zip
+assignment3-nlp-template.pptx
